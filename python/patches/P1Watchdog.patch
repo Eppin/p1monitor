@@ -1,0 +1,32 @@
+--- scripts/P1Watchdog.py	2024-03-22 18:33:17
++++ patches/P1Watchdog.py	2024-03-22 18:45:16
+@@ -105,7 +105,6 @@
+     #rt_status_db.strset( '', 110, flog )
+ 
+     check_for_new_p1monitor_version()
+-    get_cpu_temperature()
+     DuckDNS()
+     get_default_gateway()
+     ntp_status()
+\ No newline at end of file
+@@ -141,8 +140,6 @@
+             rt_status_db.strset( system_info_lib.get_disk_pct_used( const.DIR_RAMDISK), 21, flog  )
+             ## RAMgebruik
+             rt_status_db.strset( ram_used_percentage(),31,flog)
+-            ## CPU temperatuur
+-            get_cpu_temperature()
+             ## controle of er nog P1 data binnen komt.
+             check_for_p1port_data()
+             ## Watermeter reset.
+\ No newline at end of file
+@@ -1522,9 +1519,6 @@
+         # do nothing if timestamp is not correct.
+         return
+ 
+-def get_cpu_temperature(): #2.0.0
+-    rt_status_db.strset( system_info_lib.get_cpu_temperature(), 69, flog )
+-
+ ########################################################
+ # checks there is a new P1 sofware version available   #
+ # by an https url request to www.ztatz.nl              #
+\ No newline at end of file

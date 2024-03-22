@@ -1,0 +1,36 @@
+--- scripts/system_info_lib.py	2024-03-22 18:33:18
++++ patches/system_info_lib.py	2024-03-22 18:48:01
+@@ -57,7 +57,11 @@
+             if 'Serial' in line:
+                     result['Serial'] = line.split(':')[1].strip()
+ 
+-        model = list(open('/proc/device-tree/model', 'r'))
++        model = {0:'Docker'}
++        result['Hardware'] = 'Docker Container'
++        result['Revision'] = 'Docker'
++        result['Serial'] = '-'
++
+         clean_str = "".join(filter( lambda x: x in string.printable, model[0] ))
+         result['Pi-model'] = clean_str
+ 
+@@ -123,20 +127,6 @@
+         return "onbekend."
+ 
+ ####################################################################
+-# return the cpu temperatrure in centigrade                        #
+-####################################################################
+-def get_cpu_temperature( return_as_str=True ):
+-    tfile = open('/sys/class/thermal/thermal_zone0/temp','r')
+-    temp = float(tfile.read())
+-    tfile.close()
+-    tempC = temp/1000
+-   # print( tempC )
+-    if return_as_str:
+-        return str( tempC )
+-    else:
+-        return tempC
+-
+-####################################################################
+ # return the amount of ram is in use in pct                        #
+ ####################################################################
+ def get_ram_used_pct():

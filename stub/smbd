@@ -1,0 +1,17 @@
+#! /bin/sh
+# Stub for SMBD
+
+DESC="SMBD stub"
+DAEMON=/sbin/sysctl
+PIDFILE=none
+
+# Comment this out for sysctl to print every item changed
+QUIET_SYSCTL="-q"
+
+do_start_cmd() {
+	STATUS=0
+	return $STATUS
+}
+
+do_stop() { return 0; }
+do_status() { return 0; }

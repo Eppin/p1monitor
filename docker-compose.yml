@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  nginx:
+    container_name: p1monitor
+    build:
+      context: .
+    stop_grace_period: 1m
+    environment:
+      - TZ=Europe/Amsterdam
+    ports:
+      - 8080:80
+    volumes:
+      - ./data:/p1mon/data
+      - ./usbdisk:/p1mon/mnt/usb
+    tmpfs:
+      - /run
+      - /tmp
+      - /p1mon/mnt/ramdisk
+      - /var/log
+    #devices:
+    #  - /dev/ttys002:/dev/ttyUSB0
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "5"
+        max-size: "10m"
