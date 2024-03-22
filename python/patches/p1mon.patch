@@ -1,0 +1,16 @@
+--- p1mon.sh	2024-03-22 22:13:09
++++ ../patches/p1mon.sh	2024-03-22 22:14:53
+@@ -118,13 +118,8 @@
+     # Start P1 port reader.
+     $PRG_PATH$PRG1 2>&1 >/dev/null &
+     #eval "$MY_PYTHON $PRG1 2>&1 >/dev/null &"
+-    pid=$! # last command pid
+     #echo "running "$pid
+     sleep 5 # give some time to start the process
+-    #sudo renice -n -15 -p $pid >/dev/null 
+-    sudo renice -n -15 $(pgrep -P $pid) >/dev/null # make sure the serial processing has an higer priorty
+-    echo "[*] $PRG1 process prioriteit verhoogd."
+-    #echo "running "$pid
+     echo "[*] $PRG1 gestart."
+     # tijd zodat de serial db bij het starten gedefragmenteerd kan worden
+     echo "[*] 3 seconden wachttijd"
