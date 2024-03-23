@@ -7,7 +7,7 @@ echo "Starting NGINX"
 sudo service nginx start
 
 echo "Starting PHP8.2-FPM"
-sudo /usr/sbin/php-fpm8.2 --fpm-config /etc/php/8.2/fpm/php-fpm.conf 
+sudo /etc/init.d/php8.2-fpm start
 
 echo "Restore file privileges"
 sudo chmod g+w /p1mon/mnt/ramdisk /p1mon/data /var/log/p1monitor
@@ -20,6 +20,9 @@ sig_handler () {
 
   echo "Stopping NGINX"
   sudo service nginx stop
+
+  echo "Stopping PHP8.2-FPM"
+  sudo /etc/init.d/php8.2-fpm stop
 
   /p1mon/scripts/p1mon.sh stop
 

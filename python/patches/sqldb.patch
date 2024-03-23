@@ -1,0 +1,11 @@
+--- ../scripts/sqldb.py	2024-03-23 10:20:53
++++ sqldb.py	2024-03-23 10:22:12
+@@ -202,7 +202,7 @@
+ 
+         # opgelet deze regel is bewust een replace geen insert!
+         self.insert_rec("replace into "+table+\
+-            " values ( '128','" + const.P1_PATCH_LEVEL + "'                                     ,'Software patch:')" )
++            " values ( '128','" + const.P1_PATCH_LEVEL + "-e" + const.P1_FORK_LEVEL + "'        ,'Software patch:')" )
+ 
+         self.insert_rec("insert or ignore into " + table + " values ( '129','0'                 ,'UI KWh meter productie(S0) zichtbaar 1/0)')")
+ 

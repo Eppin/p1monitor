@@ -18,6 +18,7 @@ RUN patch -u ./scripts/crypto3.py -i ./patches/crypto3.patch && \
     patch -u ./scripts/p1_port_shared_lib.py -i ./patches/p1_port_shared_lib.patch && \
     patch -u ./scripts/p1mon.sh -i ./patches/p1mon.patch && \
     patch -u ./scripts/P1Watchdog.py -i ./patches/P1Watchdog.patch && \
+    patch -u ./scripts/sqldb.py -i ./patches/sqldb.patch && \
     patch -u ./scripts/system_info_lib.py -i ./patches/system_info_lib.patch && \
     rm -rf ./patches
 
@@ -35,7 +36,7 @@ ENV TZ="Europe/Amsterdam"
 RUN apt update && \
     apt upgrade -y && \
     apt-get install -y \
-    sudo iputils-ping iproute2 \
+    sudo iputils-ping iproute2 logrotate \
     # Python3
     python3-venv \
     # PHP 8.2

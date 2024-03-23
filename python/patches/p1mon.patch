@@ -1,6 +1,16 @@
---- p1mon.sh	2024-03-22 22:13:09
-+++ ../patches/p1mon.sh	2024-03-22 22:14:53
-@@ -118,13 +118,8 @@
+--- ../scripts/p1mon.sh	2024-03-22 22:13:09
++++ p1mon.sh	2024-03-23 09:42:17
+@@ -43,9 +43,6 @@
+ PRG21="P1DbCopy"
+ P1FILE="p1msg.txt"
+ 
+-# make a symbolic link for old /etc/nginx/sites-enabled/p1mon_80 config files added in version 2.0.0
+-sudo ln -s /run/php/php-fpm.sock /run/php/php7.3-fpm.sock  2>/dev/null # /dev/null to be silent when link allready exits.
+-
+ ## reset rechten wegens dev werk en kopie acties.
+ sudo /bin/chmod 775  $PRG_PATH$PRG8 $PRG_PATH$PRG1 $PRG_PATH$PRG2 $PRG_PATH$PRG3 $PRG_PATH$PRG5 $PRG_PATH$PRG6 $LOG_PATH$PRG4 $PID_PATH$P1FILE  &>/dev/null
+ sudo /bin/chown p1mon:p1mon $PRG_PATH$PRG8 $PRG_PATH$PRG1 $PRG_PATH$PRG2 $PRG_PATH$PRG3 $PRG_PATH$PRG5 $PRG_PATH$PRG6 $LOG_PATH$PRG4 $PID_PATH$P1FILE &>/dev/null
+@@ -118,13 +115,8 @@
      # Start P1 port reader.
      $PRG_PATH$PRG1 2>&1 >/dev/null &
      #eval "$MY_PYTHON $PRG1 2>&1 >/dev/null &"
