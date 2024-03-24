@@ -18,6 +18,30 @@ The easiest way to get started, is by using the `docker-compose.yaml` that's ava
 
 `docker compose up -d`
 
+### Device usage
+
+Since the USB device can change and be different after a reboot or physical port change, these step will create link based on the physical properties.
+
+Find your device with `lsusb` and take a note of the ID. The vendor is **0403** and the product is **6001**
+
+```
+Bus 004 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+Bus 003 Device 002: ID 0403:6001 Future Technology Devices International, Ltd FT232 Serial (UART) IC
+Bus 003 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+```
+
+Now that we have the needed information, let's create the symbolic link:
+
+`nano /etc/udev/rules.d/50-myusb.rules`
+
+```
+KERNEL=="ttyUSB[0-9]*", SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", MODE="0666", SYMLINK+="p1mon"
+```
+
+Make sure to replace the `idVendor` and `idProduct` values with your own! Save the file and reboot the system. Now you have a symbolic link `/dev/p1mon`, which can be passed through in the Docker container.
+
 # License
 
 Refer to the `License.md` for details regarding licensing.
