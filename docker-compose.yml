@@ -4,6 +4,7 @@ services:
   p1monitor:
     container_name: p1monitor
     image: ghcr.io/eppin/p1monitor:main
+    stop_grace_period: 1m
     environment:
       - TZ=Europe/Amsterdam
     ports:

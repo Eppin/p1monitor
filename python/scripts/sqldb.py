@@ -8,8 +8,9 @@ from utiltimestamp import utiltimestamp
 
 class configDB():
 
-    def init(self,dbname, table):
+    def init(self,dbname, table, flog=None):
         #print "[*DB*] ",dbname, table
+        self.flog = flog
         self.dbname = dbname
         self.con = lite.connect(dbname)
         self.cur = self.con.cursor()
@@ -84,7 +85,7 @@ class configDB():
         self.insert_rec("insert or ignore into "+table+" values ( '38','1'                     ,'gas waarde telegram prefix 1-96.')")
         self.insert_rec("insert or ignore into "+table+" values ( '39','0'                     ,'financiele max. grens waarde')")
         self.insert_rec("insert or ignore into "+table+" values ( '40','0'                     ,'counter value API aan of uit (1/0)')")
-        self.insert_rec("insert or ignore into "+table+" values ( '41','10'                    ,'UI gas-levering maximaal')")
+        self.insert_rec("insert or ignore into "+table+" values ( '41','10'                    ,'UI gas-verbruik maximaal')")
         self.insert_rec("insert or ignore into "+table+" values ( '42','0'                     ,'p1data API aan of uit (1/0)')")
         self.insert_rec("insert or ignore into "+table+" values ( '43','0'                     ,'eigen user interface gebruiken.')") 
         self.insert_rec("insert or ignore into "+table+" values ( '44','0'                     ,'verwarmingstemperatuur gebruiken.')") 
@@ -328,9 +329,8 @@ class configDB():
         self.insert_rec( "insert or ignore into " + table + " values ( '204','0'               ,'gebruik van vaste tarieven of dynamische tarieven.')")
         self.insert_rec( "insert or ignore into " + table + " values ( '205','0.0212'          ,'flexible kosten per kWh inkoop.')")
         self.insert_rec( "insert or ignore into " + table + " values ( '206','1'               ,'UI piek kw verbergen (1/0)')")
-        
-        #TODO 207 is nog vrij voor toekomstig gebruik nooit in productie gebruikt
-        #self.insert_rec( "insert or ignore into " + table + " values ( '207','0'               ,'flexible kosten per kWh Opslag duurzame energie (ODE).')")
+
+        self.insert_rec( "insert or ignore into " + table + " values ( '207','6'                ,'UI gas-verbruik dag maximaal')")
         self.insert_rec( "insert or ignore into " + table + " values ( '208','0.851'            ,'flexible kosten per gas inkoop.')")
 
         # notificatie
@@ -381,8 +381,6 @@ class configDB():
         
         #setFile2user(filename,'p1mon')  
         #update config set PARAMETER='0.3', LABEL='Versie:' where ID ='1';
-
-
 
     def close_db(self):
         if self.con:
@@ -445,11 +443,19 @@ class configDB():
         self.con.execute("PRAGMA quick_check;")
         self.close_db()
 
+    def execute( self, sqlstr ):
+        self.con = lite.connect(self.dbname)
+        self.cur = self.con.cursor()
+        self.cur.execute( sqlstr )
+        self.con.commit()
+        self.close_db()
+
 
 class rtStatusDb():
 
-    def init(self,dbname, table):
+    def init(self,dbname, table, flog=None):
         #print dbname, table
+        self.flog = flog
         self.dbname = dbname
         self.con = lite.connect(dbname)
         self.cur = self.con.cursor()
@@ -760,11 +766,11 @@ class rtStatusDb():
 
         self.insert_rec("insert or ignore into " + table + " values ( '100','0','Huidige Amperage L1 (31.7.0)',0)")
         self.insert_rec("insert or ignore into " + table + " values ( '101','0','Huidige Amperage L2 (51.7.0)',0)")
-        self.insert_rec("insert or ignore into " + table + " values ( '102','0','Huidige Amperage L2 (71.7.0)',0)")
+        self.insert_rec("insert or ignore into " + table + " values ( '102','0','Huidige Amperage L3 (71.7.0)',0)")
 
         self.insert_rec("insert or ignore into " + table + " values ( '103','0','Huidige Voltage L1 (32.7.0)',0)")
         self.insert_rec("insert or ignore into " + table + " values ( '104','0','Huidige Voltage L2 (52.7.0)',0)")
-        self.insert_rec("insert or ignore into " + table + " values ( '105','0','Huidige Voltage L2 (72.7.0)',0)")
+        self.insert_rec("insert or ignore into " + table + " values ( '105','0','Huidige Voltage L3 (72.7.0)',0)")
 
         self.insert_rec("insert or ignore into " + table + " values ( '106','onbekend','Tijdstip laatste fase waarde wijziging:',0)")
         self.insert_rec("insert or ignore into " + table + " values ( '107','onbekend','Status van watermeter totaal stand:',0)")
@@ -806,6 +812,9 @@ class rtStatusDb():
 
         self.insert_rec("insert or ignore into " + table + " values ( '129','onbekend','Tijdstip laaste update dynamische tarieven:',0)")
 
+        self.insert_rec("insert or ignore into " + table + " values ( '130','0','Huidige KW verbruik L1,L2,L3 totaal',0)")
+        self.insert_rec("insert or ignore into " + table + " values ( '131','0','Huidige KW levering L1,L2,L3 totaal',0)")
+        self.insert_rec("insert or ignore into " + table + " values ( '132','0','Netto levering/verbruik L1,L2,L3 totaal',0)")
 
         # fix typo's from version 0.9.15a and up
         sql_update = "update status set label ='Tijdstip laatste verwerkte minuten gegevens:' where id=7"
@@ -818,6 +827,12 @@ class rtStatusDb():
         self.update_rec(sql_update)
         sql_update = "update status set label ='Tijdstip laatste verwerkte watermeterstand reset:' where id=91"
         self.update_rec(sql_update)
+    
+        sql_update = "update status set label ='Huidige Amperage L3 (71.7.0)' where id=102"
+        self.update_rec(sql_update)
+        sql_update = "update status set label ='Huidige Voltage L3 (72.7.0)' where id=105"
+        self.update_rec(sql_update)
+
 
         # reuse of no longer used id's
         sql_update = "update status set label ='Kw waarde 1.4.0 P1 telegram:' where id=32"
@@ -894,6 +909,13 @@ class rtStatusDb():
         self.con.execute("PRAGMA quick_check;")
         self.close_db()
 
+    def execute( self, sqlstr ):
+        self.con = lite.connect(self.dbname)
+        self.cur = self.con.cursor()
+        self.cur.execute( sqlstr )
+        self.con.commit()
+        self.close_db()
+
 INDEX_SECONDS = 10
 INDEX_MINUTE  = 11
 INDEX_HOUR    = 12
@@ -917,7 +939,7 @@ POWER_PRODUCTION_REC = {
 
 class powerProductionDB():
     
-    def init( self, dbname, table, flog ):
+    def init( self, dbname, table, flog=None ):
         self.dbname = dbname
         self.con = lite.connect(dbname)
         self.cur = self.con.cursor()
@@ -1100,7 +1122,7 @@ POWER_PRODUCTION_SOLAR_REC = {
 
 class powerProductionSolarDB():
     
-    def init( self, dbname, table, flog ):
+    def init( self, dbname, table, flog=None ):
         self.dbname = dbname
         self.con = lite.connect(dbname)
         self.cur = self.con.cursor()
@@ -1231,7 +1253,7 @@ WATERMETER_REC = {
 
 class WatermeterDBV2(): 
 
-    def init( self, dbname, table, flog ):
+    def init( self, dbname, table, flog=None ):
         self.dbname = dbname
         self.con = lite.connect(dbname)
         self.cur = self.con.cursor()
@@ -1243,8 +1265,9 @@ class WatermeterDBV2():
         # PULS_PER_TIMEUNIT number of pulses detected during the period
         # VERBR_PER_TIMEUNIT Liter of water during the period
         # VERBR_IN_M3_TOTAAL Liter of water in M3 during the period
+        # version <= 2.4.1 had a bug where the tabel schema was defined as "TIMESTAMP TEXT     TEXT NOT NULL, \" double TEXT :(
         self.cur.execute(" CREATE TABLE IF NOT EXISTS " +table+"(\
-            TIMESTAMP TEXT     TEXT NOT NULL, \
+            TIMESTAMP          TEXT NOT NULL, \
             TIMEPERIOD_ID      INTEGER NOT NULL DEFAULT 0,\
             PULS_PER_TIMEUNIT  REAL DEFAULT 0, \
             VERBR_PER_TIMEUNIT REAL DEFAULT 0, \
@@ -1396,7 +1419,8 @@ class WatermeterDBV2():
 
 class PhaseMaxMinDB():
 
-    def init(self, dbname, table):
+    def init(self, dbname, table, flog=None):
+        self.flog = flog
         self.dbname = dbname
         self.con = lite.connect(dbname)
         self.cur = self.con.cursor()
@@ -1500,7 +1524,8 @@ class PhaseMaxMinDB():
 
 class PhaseDB():
 
-    def init(self, dbname, table):
+    def init(self, dbname, table, flog=None):
+        self.flog = flog
         self.dbname = dbname
         self.con = lite.connect(dbname)
         self.cur = self.con.cursor()
@@ -1610,7 +1635,8 @@ class PhaseDB():
 
 class temperatureDB():
 
-    def init(self, dbname, table):
+    def init(self, dbname, table, flog=None):
+        self.flog = flog
         self.dbname = dbname
         self.con = lite.connect(dbname)
         self.cur = self.con.cursor()
@@ -1947,16 +1973,17 @@ class temperatureDB():
 
 class historyWeatherDB():
 
-    def init(self,dbname, table):
+    def init(self,dbname, table, flog=None):
+        self.flog = flog
         #print dbname, table
         self.dbname = dbname
         self.con = lite.connect(dbname)
         self.cur = self.con.cursor()
         self.table = table
         self.cur.execute("CREATE TABLE IF NOT EXISTS "+table+"(\
-        TIMESTAMP         TEXT PRIMARY KEY NOT NULL, \
+        TIMESTAMP       TEXT PRIMARY KEY NOT NULL, \
         CITY_ID         INTEGER NOT NULL,\
-        CITY             TEXT, \
+        CITY            TEXT, \
         TEMPERATURE_MIN	REAL DEFAULT 0, \
         TEMPERATURE_AVG	REAL DEFAULT 0, \
         TEMPERATURE_MAX	REAL DEFAULT 0, \
@@ -2081,7 +2108,8 @@ WIND_DEGREE_MIN,WIND_DEGREE_AVG,WIND_DEGREE_MAX,DEGREE_DAYS\
 
 class currentWeatherDB():
 
-    def init(self,dbname, table):
+    def init(self,dbname, table, flog=None):
+        self.flog = flog
         #print dbname, table
         self.dbname = dbname
         self.con = lite.connect(dbname)
@@ -2205,9 +2233,17 @@ WEATHER_ICON,PRESSURE,HUMIDITY,WIND_SPEED,WIND_DEGREE,CLOUDS,WEATHER_ID) values 
         self.con.execute("PRAGMA quick_check;")
         self.close_db()
 
+    def execute( self, sqlstr ):
+        self.con = lite.connect(self.dbname)
+        self.cur = self.con.cursor()
+        self.cur.execute( sqlstr )
+        self.con.commit()
+        self.close_db()
+
 class SqlDb1():
     
-    def init(self, dbname, table):
+    def init(self, dbname, table, flog=None):
+        self.flog = flog
         self.dbname = dbname
         self.con = lite.connect(dbname)
         self.cur = self.con.cursor()
@@ -2309,10 +2345,18 @@ class SqlDb1():
         rowcount = self.cur.fetchall()
         self.close_db()
         return int( rowcount[0][0] )
+    
+    def execute( self, sqlstr ):
+        self.con = lite.connect(self.dbname)
+        self.cur = self.con.cursor()
+        self.cur.execute( sqlstr )
+        self.con.commit()
+        self.close_db()
 
 class SqlDb2():
     
-    def init(self,dbname, table):
+    def init(self,dbname, table, flog=None):
+        self.flog = flog
         self.dbname = dbname
         self.con = lite.connect(dbname ) 
         self.cur = self.con.cursor()
@@ -2423,10 +2467,18 @@ ACT_GELVR_KW_270,VERBR_GAS_2421) values ('" + \
         self.con = lite.connect(self.dbname)
         self.con.execute("PRAGMA quick_check;")
         self.close_db()
+    
+    def execute( self, sqlstr ):
+        self.con = lite.connect(self.dbname)
+        self.cur = self.con.cursor()
+        self.cur.execute( sqlstr )
+        self.con.commit()
+        self.close_db()
 
 class SqlDb3():
 
-    def init(self,dbname, table):
+    def init(self,dbname, table,flog=None):
+        self.flog = flog
         self.dbname = dbname
         self.con = lite.connect(dbname)
         self.cur = self.con.cursor()
@@ -2526,9 +2578,17 @@ GELVR_KWH_281,GELVR_KWH_282,VERBR_KWH_X,GELVR_KWH_X,TARIEFCODE,VERBR_GAS_2421,VE
         self.con.execute("PRAGMA quick_check;")
         self.close_db()
 
+    def execute( self, sqlstr ):
+        self.con = lite.connect(self.dbname)
+        self.cur = self.con.cursor()
+        self.cur.execute( sqlstr )
+        self.con.commit()
+        self.close_db()
+
 class SqlDb4():
 
-    def init(self,dbname, table):
+    def init(self,dbname, table, flog=None):
+        self.flog = flog
         self.dbname = dbname
         self.con = lite.connect(dbname)
         self.cur = self.con.cursor()
@@ -2654,9 +2714,17 @@ GELVR_KWH_281,GELVR_KWH_282,VERBR_KWH_X,GELVR_KWH_X,VERBR_GAS_2421,VERBR_GAS_X) 
         self.con.execute("PRAGMA quick_check;")
         self.close_db()
 
+    def execute( self, sqlstr ):
+        self.con = lite.connect(self.dbname)
+        self.cur = self.con.cursor()
+        self.cur.execute( sqlstr )
+        self.con.commit()
+        self.close_db()
+
 class financieelDb():
 
-    def init(self, dbname, table):
+    def init(self, dbname, table, flog=None):
+        self.flog = flog
         #print dbname
         #print "[*]",table
         self.dbname = dbname
