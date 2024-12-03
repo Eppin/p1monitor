@@ -1,5 +1,5 @@
---- scripts/system_info_lib.py	2024-03-22 18:33:18
-+++ patches/system_info_lib.py	2024-03-22 18:48:01
+--- system_info_lib.py	2024-12-03 17:45:11.289010400 +0100
++++ system_info_lib_copy.py	2024-12-03 17:45:18.582646000 +0100
 @@ -57,7 +57,11 @@
              if 'Serial' in line:
                      result['Serial'] = line.split(':')[1].strip()

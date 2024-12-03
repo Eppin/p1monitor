@@ -1,5 +1,5 @@
 # Build container
-FROM debian:bookworm as builder
+FROM debian:bookworm AS builder
 WORKDIR /app
 
 ENV TZ="Europe/Amsterdam"
@@ -15,7 +15,6 @@ RUN apt update && \
 COPY python/scripts ./scripts
 COPY python/patches ./patches
 RUN patch -u ./scripts/crypto3.py -i ./patches/crypto3.patch && \
-    patch -u ./scripts/p1_port_shared_lib.py -i ./patches/p1_port_shared_lib.patch && \
     patch -u ./scripts/p1mon.sh -i ./patches/p1mon.patch && \
     patch -u ./scripts/P1Watchdog.py -i ./patches/P1Watchdog.patch && \
     patch -u ./scripts/sqldb.py -i ./patches/sqldb.patch && \
@@ -29,7 +28,7 @@ WORKDIR /p1mon/p1monenv
 RUN /bin/bash -c "source ./bin/activate && pip3 install -r requirements.txt && pip3 uninstall -y pycrypto && pip3 install pycryptodome"
 
 # Publish container
-FROM nginx:1.25.4-bookworm as publish
+FROM nginx:1.25.4-bookworm AS publish
 
 ENV TZ="Europe/Amsterdam"
 
