@@ -49,16 +49,15 @@ def Main(argv):
     
 #-------------------------------
 if __name__ == "__main__":
-    logfile = const.DIR_FILELOG+prgname+".log" 
     try:
         logfile = const.DIR_FILELOG+prgname+".log" 
-        util.setFile2user( logfile, 'p1mon' )
+        util.setFile2user( logfile, 'p1mon ')
         flog = logger.fileLogger( logfile, prgname )
         #### aanpassen bij productie
         flog.setLevel( logger.logging.INFO )
         flog.consoleOutputOn(False)
     except Exception as e:
-        print ( "critical geen logging mogelijke, gestopt.:"+str(logfile) )
+        print ( "critical geen logging mogelijke, gestopt.:"+str(e.args[0]) )
         sys.exit(10) #  error: no logging check file rights
 
     Main(sys.argv[1:])

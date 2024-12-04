@@ -177,46 +177,34 @@ function updateData() {
       //hideStuff('loading-fasedata');
     }
 
-    $('#L1WattGraph').highcharts().series[0].setData( null, false );
-    $('#L1WattGraph').highcharts().series[1].setData( null, false );
-    $('#L1WattGraph').highcharts().series[0].setData( GWattDataL1Consumed, false ); // update the chart only when all data is set.
+    $('#L1WattGraph').highcharts().series[0].setData( GWattDataL1Consumed, false );
     $('#L1WattGraph').highcharts().series[1].setData( GWattDataL1Produced, false );
-    $('#L1WattGraph').highcharts().redraw();
+    $('#L1WattGraph').highcharts().redraw( );
 
-    $('#L2WattGraph').highcharts().series[0].setData( null, false );
-    $('#L2WattGraph').highcharts().series[1].setData( null, false );
-    $('#L2WattGraph').highcharts().series[0].setData( GWattDataL2Consumed, false ); // update the chart only when all data is set.
+    $('#L2WattGraph').highcharts().series[0].setData( GWattDataL2Consumed, false ); 
     $('#L2WattGraph').highcharts().series[1].setData( GWattDataL2Produced, false );
     $('#L2WattGraph').highcharts().redraw();
 
-    $('#L3WattGraph').highcharts().series[0].setData( null, false );
-    $('#L3WattGraph').highcharts().series[1].setData( null, false );
-    $('#L3WattGraph').highcharts().series[0].setData( GWattDataL3Consumed, false ); // update the chart only when all data is set.
+    $('#L3WattGraph').highcharts().series[0].setData( GWattDataL3Consumed, false );
     $('#L3WattGraph').highcharts().series[1].setData( GWattDataL3Produced, false );
     $('#L3WattGraph').highcharts().redraw();
 
-    $('#L1AmpereGraph').highcharts().series[0].setData( null, false );
-    $('#L1AmpereGraph').highcharts().series[0].setData( GAmpereL1, false ); // update the chart only when all data is set.
+    $('#L1AmpereGraph').highcharts().series[0].setData( GAmpereL1, false );
     $('#L1AmpereGraph').highcharts().redraw();
 
-    $('#L2AmpereGraph').highcharts().series[0].setData( null, false );
-    $('#L2AmpereGraph').highcharts().series[0].setData( GAmpereL2, false ); // update the chart only when all data is set.
+    $('#L2AmpereGraph').highcharts().series[0].setData( GAmpereL2, false );
     $('#L2AmpereGraph').highcharts().redraw();
 
-    $('#L3AmpereGraph').highcharts().series[0].setData( null, false );
-    $('#L3AmpereGraph').highcharts().series[0].setData( GAmpereL3, false ); // update the chart only when all data is set.
+    $('#L3AmpereGraph').highcharts().series[0].setData( GAmpereL3, false );
     $('#L3AmpereGraph').highcharts().redraw();
 
-    $('#L1VoltGraph').highcharts().series[0].setData( null, false );
-    $('#L1VoltGraph').highcharts().series[0].setData( GVoltL1, false ); // update the chart only when all data is set.
+    $('#L1VoltGraph').highcharts().series[0].setData( GVoltL1, false );
     $('#L1VoltGraph').highcharts().redraw();
 
-    $('#L2VoltGraph').highcharts().series[0].setData( null, false );
-    $('#L2VoltGraph').highcharts().series[0].setData( GVoltL2, false ); // update the chart only when all data is set.
+    $('#L2VoltGraph').highcharts().series[0].setData( GVoltL2, false );
     $('#L2VoltGraph').highcharts().redraw();
 
-    $('#L3VoltGraph').highcharts().series[0].setData( null, false );
-    $('#L3VoltGraph').highcharts().series[0].setData( GVoltL3, false ); // update the chart only when all data is set.
+    $('#L3VoltGraph').highcharts().series[0].setData( GVoltL3, false );
     $('#L3VoltGraph').highcharts().redraw();
 
     setButtonEvents( true ); 
@@ -560,7 +548,7 @@ function setButtonVisbilty() {
                 <div class="float-left"       id="L3VoltGraph"></div>
             </div>
             <div id="loading-data" >
-                <img src="./img/ajax-loader.gif" alt="Even geduld aub." height="15" width="128">
+                <img src="./img/ajax-loader.gif" alt="<?php echo strIdx(295);?>" height="15" width="128">
             </div>
             <div id="loading-fasedata">
                    <?php echo strIdx( 91 );?>

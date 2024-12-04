@@ -39,10 +39,18 @@ CONFIG_TMP_EXT            = "_config.tmp"
 DEFAULT_INET_DNS          = "8.8.8.8" 
 
 FQDN_LIST= [
-    "1.1.1.1",\
-    "google.nl",\
+    "www.google.nl",\
+    "www.google.com",\
+    "youTube.com",\
+    "facebook.com",\
+    "wikipedia.org",\
+    "amazon.com",\
     "nu.nl",\
     "nos.nl",\
+    "ad.nl",\
+    "live.com",\
+    "bol.com",\
+    "netflix.com"\
 ]
 
 

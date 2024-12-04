@@ -34,15 +34,18 @@
 # versie 2.3.0 P1Upgrade assistent en watermeter conversie verwijderd.
 # versie 2.4.0 Veel vertalingen uitgewerkt.
 # versie 2.4.0-1 Crypto en Exception bug opgelost en omgezet naar een Docker container
+# versie 2.4.1 Vertalingen uitgewerkt aangevuld.
+# versie 2.4.2 P1DatabaseOptimizer toegevoegd en fase informatie aan op de main schermen.
+# versie 2.4.2-1 Patch gedownload, uitgepakt en toegepast.
 
 ###########################################
 # onderstaande drie versie constanten bij #
 # elke release aanpassen                  #
 ###########################################
-P1_VERSIE                       = "2.4.0"       # semantische versie nummers.
-P1_PATCH_LEVEL                  = "0"           # standaard op 0, wordt verhoogd als op een image een patch wordt uitgevoerd.
-P1_FORK_LEVEL                   = "2"           # wordt verhoogd als er een wijzging buiten het officiële project om wordt gemaakt.
-P1_SERIAL_VERSION               = "20231015"    # moet altijd gewijzigd worden bij een nieuwe versie
+P1_VERSIE                       = "2.4.2"       # semantische versie nummers.
+P1_PATCH_LEVEL                  = "1"           # standaard op 0, wordt verhoogd als op een image een patch wordt uitgevoerd.
+P1_FORK_LEVEL                   = "3"           # wordt verhoogd als er een wijzging buiten het officiële project om wordt gemaakt.
+P1_SERIAL_VERSION               = "20240821"    # moet altijd gewijzigd worden bij een nieuwe versie
 
 #CRYPTO_SEED                     ="bee31cd96a3ce221"
 DEFAULT_EMAIL_NOTIFICATION      = 'P1 monitor notificatie'
@@ -65,8 +68,10 @@ DBX_DIR_BACKUP                  ="/backup"
 DBX_DIR_DATA                    ="/data"
 DBX_REQ_DATA                    ="datarequestsqldb"
 DB_SERIAL                       ="e_serial"
-DB_E_HISTORIE                   ="historie"
+DB_E_HISTORIE                   ="e_historie" # added version > 2.4.1
+DB_E_HISTORIE_TAIL              ="historie"
 DB_CONFIG                       ="configuratie"
+DB_CONFIGURATIE                 ="config" # added version > 2.4.1
 DB_STATUS                       ="status"
 DB_FINANCIEEL                   ="financieel" # aangepast vanaf versie 0.9.19 en hoger was finacieel
 DB_WEER                         ="weer"
@@ -94,7 +99,7 @@ DB_CONFIG_TAB                   ="config"
 DB_FINANCIEEL_DAG_TAB           ="e_financieel_dag"
 DB_FINANCIEEL_MAAND_TAB         ="e_financieel_maand"
 DB_FINANCIEEL_JAAR_TAB          ="e_financieel_jaar"
-DB_FINANCIEEL_DAG_VOORSPEL_TAB  ="e_financieel_voorspel_dag"
+#DB_FINANCIEEL_DAG_VOORSPEL_TAB  ="e_financieel_voorspel_dag" remove in version > 2.4.1
 DB_ENERGIEPRIJZEN_UUR_TAB       ="energieprijzen_uur"
 DB_WEATHER_TAB                  ="weer"
 DB_WEATHER_UUR_TAB              ="weer_history_uur"
@@ -106,6 +111,8 @@ DB_POWERPRODUCTION_TAB          ="powerproduction"
 DB_POWERPRODUCTION_SOLAR_TAB    ="powerproduction_solar" # 1.3.0
 DIR_EXPORT                      ="/p1mon/export/"
 DIR_FILEDISK                    ="/p1mon/data/"
+DIR_RECOVERY                    ="/p1mon/recovery/"
+FILE_DB_RECOVERY_EXT            =".recovery.db"
 #DIR_FILELOG                     ="/p1mon/var/log/"
 DIR_FILELOG                     ="/var/log/p1monitor/"
 DIR_FILESEMAPHORE               ="/p1mon/mnt/ramdisk/"
